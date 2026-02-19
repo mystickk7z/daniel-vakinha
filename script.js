@@ -19,27 +19,10 @@ function selectAmount(amount) {
     // Adicionar seleção ao botão clicado
     event.target.classList.add('selected');
     
-    // Atualizar preview na barra de progresso
-    updateProgressPreview(amount);
-}
-
-function updateProgressPreview(amount) {
-    const newAmount = currentAmount + amount;
-    const percentage = Math.min((newAmount / goalAmount) * 100, 100);
-    
-    // Atualizar temporariamente a barra com preview
-    document.getElementById('progress-fill').style.width = percentage + '%';
-    document.getElementById('percentage').textContent = percentage.toFixed(1);
-    document.getElementById('current-amount').textContent = formatCurrency(newAmount);
-    
-    // Adicionar efeito visual
-    document.getElementById('progress-fill').style.opacity = '0.7';
-    
-    // Voltar ao normal após 2 segundos
-    setTimeout(() => {
-        updateProgress();
-        document.getElementById('progress-fill').style.opacity = '1';
-    }, 2000);
+    // Mostrar o valor selecionado na barra
+    document.getElementById('current-amount').textContent = formatCurrency(amount);
+    document.getElementById('current-amount').style.color = '#4CAF50';
+    document.getElementById('current-amount').style.fontWeight = 'bold';
 }
 
 function donate() {
@@ -159,7 +142,7 @@ document.getElementById('custom-value').addEventListener('keypress', function(e)
     }
 });
 
-// Atualizar preview quando digitar valor customizado
+// Atualizar valor quando digitar
 document.getElementById('custom-value').addEventListener('input', function(e) {
     const value = parseFloat(e.target.value);
     if (value > 0) {
@@ -169,8 +152,15 @@ document.getElementById('custom-value').addEventListener('input', function(e) {
         });
         selectedAmount = 0;
         
-        // Atualizar preview
-        updateProgressPreview(value);
+        // Mostrar valor digitado na barra
+        document.getElementById('current-amount').textContent = formatCurrency(value);
+        document.getElementById('current-amount').style.color = '#4CAF50';
+        document.getElementById('current-amount').style.fontWeight = 'bold';
+    } else {
+        // Voltar ao valor original se apagar
+        document.getElementById('current-amount').textContent = formatCurrency(currentAmount);
+        document.getElementById('current-amount').style.color = '';
+        document.getElementById('current-amount').style.fontWeight = '';
     }
 });
 
