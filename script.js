@@ -9,7 +9,9 @@ updateProgress();
 
 function selectAmount(amount) {
     selectedAmount = amount;
-    document.getElementById('custom-value').value = '';
+    
+    // Mostrar o valor no campo de input
+    document.getElementById('custom-value').value = amount;
     
     // Remover seleção anterior
     document.querySelectorAll('.donation-btn').forEach(btn => {
@@ -18,11 +20,6 @@ function selectAmount(amount) {
     
     // Adicionar seleção ao botão clicado
     event.target.classList.add('selected');
-    
-    // Mostrar o valor selecionado na barra
-    document.getElementById('current-amount').textContent = formatCurrency(amount);
-    document.getElementById('current-amount').style.color = '#4CAF50';
-    document.getElementById('current-amount').style.fontWeight = 'bold';
 }
 
 function donate() {
@@ -142,26 +139,13 @@ document.getElementById('custom-value').addEventListener('keypress', function(e)
     }
 });
 
-// Atualizar valor quando digitar
+// Remover seleção dos botões quando digitar manualmente
 document.getElementById('custom-value').addEventListener('input', function(e) {
-    const value = parseFloat(e.target.value);
-    if (value > 0) {
-        // Remover seleção dos botões
-        document.querySelectorAll('.donation-btn').forEach(btn => {
-            btn.classList.remove('selected');
-        });
-        selectedAmount = 0;
-        
-        // Mostrar valor digitado na barra
-        document.getElementById('current-amount').textContent = formatCurrency(value);
-        document.getElementById('current-amount').style.color = '#4CAF50';
-        document.getElementById('current-amount').style.fontWeight = 'bold';
-    } else {
-        // Voltar ao valor original se apagar
-        document.getElementById('current-amount').textContent = formatCurrency(currentAmount);
-        document.getElementById('current-amount').style.color = '';
-        document.getElementById('current-amount').style.fontWeight = '';
-    }
+    // Remover seleção dos botões
+    document.querySelectorAll('.donation-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    selectedAmount = 0;
 });
 
 
