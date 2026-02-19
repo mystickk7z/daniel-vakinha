@@ -8,18 +8,33 @@ let selectedAmount = 0;
 updateProgress();
 
 function selectAmount(amount) {
-    selectedAmount = amount;
+    const currentValue = parseFloat(document.getElementById('custom-value').value) || 0;
     
-    // Mostrar o valor no campo de input
-    document.getElementById('custom-value').value = amount;
-    
-    // Remover seleção anterior
-    document.querySelectorAll('.donation-btn').forEach(btn => {
-        btn.classList.remove('selected');
-    });
-    
-    // Adicionar seleção ao botão clicado
-    event.target.classList.add('selected');
+    // Se o botão já está selecionado, adiciona o valor
+    if (event.target.classList.contains('selected')) {
+        const newValue = currentValue + amount;
+        
+        // Verificar limite máximo
+        if (newValue > 120) {
+            alert('⚠️ O valor máximo por transação é R$ 120,00');
+            return;
+        }
+        
+        document.getElementById('custom-value').value = newValue;
+        selectedAmount = newValue;
+    } else {
+        // Se não está selecionado, substitui o valor
+        selectedAmount = amount;
+        document.getElementById('custom-value').value = amount;
+        
+        // Remover seleção anterior
+        document.querySelectorAll('.donation-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        
+        // Adicionar seleção ao botão clicado
+        event.target.classList.add('selected');
+    }
 }
 
 function donate() {
