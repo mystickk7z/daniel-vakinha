@@ -128,7 +128,7 @@
         document.getElementById('pixCode').textContent = pixCode;
 
         // Gerar QR Code via API do Google Charts
-        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(pixCode)}`;
+        const qrCodeUrl = `https://chart.googleapis.com/chart?cht=qr&chs=250x250&chl=${encodeURIComponent(pixCode)}`;
         document.getElementById('qrcodeImg').src = qrCodeUrl;
 
         function copyCode() {
