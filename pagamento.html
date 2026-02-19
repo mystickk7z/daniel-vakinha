@@ -104,7 +104,7 @@
         <p class="instructions">Escaneie o QR Code abaixo com o app do seu banco:</p>
         
         <div id="qrcode">
-            <img id="qrcodeImg" style="width: 250px; height: 250px;" />
+            <canvas id="qrcodeCanvas"></canvas>
         </div>
         
         <p class="instructions">Ou copie o código Pix:</p>
@@ -116,6 +116,7 @@
         <a href="/" class="back-btn">← Voltar para a página inicial</a>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         const pixCode = localStorage.getItem('pixCode');
         const amount = localStorage.getItem('pixAmount');
@@ -127,9 +128,15 @@
         document.getElementById('amount').textContent = 'R$ ' + parseFloat(amount).toFixed(2);
         document.getElementById('pixCode').textContent = pixCode;
 
-        // Gerar QR Code via API do Google Charts
-        const qrCodeUrl = `https://chart.googleapis.com/chart?cht=qr&chs=250x250&chl=${encodeURIComponent(pixCode)}`;
-        document.getElementById('qrcodeImg').src = qrCodeUrl;
+        // Gerar QR Code
+        new QRCode(document.getElementById("qrcode"), {
+            text: pixCode,
+            width: 250,
+            height: 250,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
 
         function copyCode() {
             navigator.clipboard.writeText(pixCode).then(() => {
