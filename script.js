@@ -18,6 +18,28 @@ function selectAmount(amount) {
     
     // Adicionar seleção ao botão clicado
     event.target.classList.add('selected');
+    
+    // Atualizar preview na barra de progresso
+    updateProgressPreview(amount);
+}
+
+function updateProgressPreview(amount) {
+    const newAmount = currentAmount + amount;
+    const percentage = Math.min((newAmount / goalAmount) * 100, 100);
+    
+    // Atualizar temporariamente a barra com preview
+    document.getElementById('progress-fill').style.width = percentage + '%';
+    document.getElementById('percentage').textContent = percentage.toFixed(1);
+    document.getElementById('current-amount').textContent = formatCurrency(newAmount);
+    
+    // Adicionar efeito visual
+    document.getElementById('progress-fill').style.opacity = '0.7';
+    
+    // Voltar ao normal após 2 segundos
+    setTimeout(() => {
+        updateProgress();
+        document.getElementById('progress-fill').style.opacity = '1';
+    }, 2000);
 }
 
 function donate() {
@@ -26,6 +48,12 @@ function donate() {
     
     if (!amount || amount <= 0) {
         alert('Por favor, selecione ou digite um valor para contribuir!');
+        return;
+    }
+    
+    // Validar valor máximo
+    if (amount > 120) {
+        alert('⚠️ O valor máximo por transação é R$ 120,00.\n\nPara valores maiores, faça múltiplas doações.');
         return;
     }
     
@@ -128,6 +156,21 @@ function shareInstagram() {
 document.getElementById('custom-value').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         donate();
+    }
+});
+
+// Atualizar preview quando digitar valor customizado
+document.getElementById('custom-value').addEventListener('input', function(e) {
+    const value = parseFloat(e.target.value);
+    if (value > 0) {
+        // Remover seleção dos botões
+        document.querySelectorAll('.donation-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        selectedAmount = 0;
+        
+        // Atualizar preview
+        updateProgressPreview(value);
     }
 });
 
