@@ -46,7 +46,7 @@ async function createPayment(amount, name, email) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                amount: amount,
+                amount: parseFloat(amount),
                 name: name,
                 email: email
             })
@@ -63,12 +63,13 @@ async function createPayment(amount, name, email) {
             window.location.href = '/pagamento.html';
         } else {
             console.error('Erro nos dados:', data);
-            alert('Erro ao gerar link de pagamento: ' + (data.details || 'Tente novamente'));
+            const errorMsg = typeof data.details === 'object' ? JSON.stringify(data.details) : data.details;
+            alert('Erro ao gerar link de pagamento: ' + (errorMsg || data.error || 'Tente novamente'));
         }
         
     } catch (error) {
         console.error('Erro ao processar pagamento:', error);
-        alert('Erro ao processar pagamento. Verifique se o servidor está rodando e tente novamente.');
+        alert('Erro ao processar pagamento. Verifique sua conexão e tente novamente.');
     }
 }
 

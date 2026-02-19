@@ -48,6 +48,14 @@ app.post('/create-payment', async (req, res) => {
 
         console.log('Criando pagamento:', { amount, name, email });
 
+        // Validar valor
+        if (!amount || amount <= 0) {
+            return res.status(400).json({ 
+                error: 'Valor inválido',
+                details: 'O valor da doação deve ser maior que zero'
+            });
+        }
+
         // Gerar token de acesso
         const token = await getAccessToken();
 
@@ -87,9 +95,14 @@ app.post('/create-payment', async (req, res) => {
             response: error.response?.data,
             status: error.response?.status
         });
-        res.status(500).json({ 
+        
+        // Retornar erro mais detalhado
+        const errorMessage = error.response?.data?.message || error.message;
+        const errorDetails = error.response?.data?.errors || error.response?.data;
+        
+        res.status(error.response?.status || 500).json({ 
             error: 'Erro ao criar cobrança',
-            details: error.response?.data || error.message 
+            details: errorDetails || errorMessage
         });
     }
 });

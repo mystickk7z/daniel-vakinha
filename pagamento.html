@@ -49,7 +49,13 @@
             padding: 20px;
             background: white;
             border-radius: 15px;
-            display: inline-block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #qrcode canvas {
+            border-radius: 10px;
         }
 
         .pix-code {
@@ -94,7 +100,6 @@
             line-height: 1.6;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -103,9 +108,7 @@
         
         <p class="instructions">Escaneie o QR Code abaixo com o app do seu banco:</p>
         
-        <div id="qrcode">
-            <canvas id="qrcodeCanvas"></canvas>
-        </div>
+        <div id="qrcode"></div>
         
         <p class="instructions">Ou copie o código Pix:</p>
         
@@ -129,13 +132,25 @@
         document.getElementById('pixCode').textContent = pixCode;
 
         // Gerar QR Code
-        new QRCode(document.getElementById("qrcode"), {
-            text: pixCode,
-            width: 250,
-            height: 250,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
+        window.addEventListener('load', function() {
+            try {
+                const qrcodeContainer = document.getElementById("qrcode");
+                qrcodeContainer.innerHTML = ''; // Limpar conteúdo anterior
+                
+                new QRCode(qrcodeContainer, {
+                    text: pixCode,
+                    width: 250,
+                    height: 250,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+                
+                console.log('QR Code gerado com sucesso!');
+            } catch (error) {
+                console.error('Erro ao gerar QR Code:', error);
+                document.getElementById('qrcode').innerHTML = '<p style="color: #999;">Use o código Pix abaixo</p>';
+            }
         });
 
         function copyCode() {
