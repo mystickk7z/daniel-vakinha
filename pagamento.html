@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento Pix - Vaquinha Daniel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .amount {
+            font-size: 2.5em;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        #qrcode {
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        .pix-code {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9em;
+            margin: 20px 0;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            width: 100%;
+            padding: 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .copy-btn:hover {
+            background: #45a049;
+        }
+
+        .back-btn {
+            margin-top: 20px;
+            color: #666;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .instructions {
+            color: #666;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Pagamento Gerado!</h1>
+        <div class="amount" id="amount">R$ 0,00</div>
+        
+        <p class="instructions">Escaneie o QR Code abaixo com o app do seu banco:</p>
+        
+        <div id="qrcode">
+            <img id="qrcodeImg" style="width: 250px; height: 250px;" />
+        </div>
+        
+        <p class="instructions">Ou copie o código Pix:</p>
+        
+        <div class="pix-code" id="pixCode"></div>
+        
+        <button class="copy-btn" onclick="copyCode()">📋 Copiar Código Pix</button>
+        
+        <a href="/" class="back-btn">← Voltar para a página inicial</a>
+    </div>
+
+    <script>
+        const pixCode = localStorage.getItem('pixCode');
+        const amount = localStorage.getItem('pixAmount');
+
+        if (!pixCode) {
+            window.location.href = '/';
+        }
+
+        document.getElementById('amount').textContent = 'R$ ' + parseFloat(amount).toFixed(2);
+        document.getElementById('pixCode').textContent = pixCode;
+
+        // Gerar QR Code via API do Google Charts
+        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(pixCode)}`;
+        document.getElementById('qrcodeImg').src = qrCodeUrl;
+
+        function copyCode() {
+            navigator.clipboard.writeText(pixCode).then(() => {
+                alert('✅ Código Pix copiado para a área de transferência!');
+            }).catch(() => {
+                alert('Erro ao copiar. Copie manualmente o código acima.');
+            });
+        }
+
+        // Limpar localStorage após 10 minutos
+        setTimeout(() => {
+            localStorage.removeItem('pixCode');
+            localStorage.removeItem('pixAmount');
+        }, 600000);
+    </script>
+</body>
+</html>
