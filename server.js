@@ -83,6 +83,15 @@ app.post('/create-payment', async (req, res) => {
 
         console.log('Resposta do SyncPay:', response.data);
 
+        // Verificar se a resposta tem o pix_code
+        if (!response.data.pix_code) {
+            console.error('Resposta sem pix_code:', response.data);
+            return res.status(500).json({
+                error: 'Resposta inválida da API',
+                details: response.data
+            });
+        }
+
         res.json({ 
             payment_url: response.data.payment_url || response.data.qr_code_url || response.data.url,
             qr_code: response.data.qr_code || response.data.pix_code,
@@ -93,7 +102,11 @@ app.post('/create-payment', async (req, res) => {
         console.error('Erro detalhado:', {
             message: error.message,
             response: error.response?.data,
-            status: error.response?.status
+            status: error.response?.status,
+            config: {
+                url: error.config?.url,
+                data: error.config?.data
+            }
         });
         
         // Retornar erro mais detalhado
@@ -102,7 +115,8 @@ app.post('/create-payment', async (req, res) => {
         
         res.status(error.response?.status || 500).json({ 
             error: 'Erro ao criar cobrança',
-            details: errorDetails || errorMessage
+            details: errorDetails || errorMessage,
+            message: errorMessage
         });
     }
 });
