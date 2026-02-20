@@ -1,5 +1,5 @@
 // Configurações da vaquinha
-let currentAmount = 0;
+let currentAmount = 1287.62;
 let goalAmount = 15000;
 let contributors = [
     { name: 'Fernanda Silva', amount: 50 },
