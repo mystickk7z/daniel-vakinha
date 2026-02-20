@@ -1,11 +1,18 @@
 // Configurações da vaquinha
 let currentAmount = 0;
 let goalAmount = 15000;
-let contributors = [];
+let contributors = [
+    { name: 'Fernanda Silva', amount: 50 },
+    { name: 'Paulo Roberto', amount: 25 },
+    { name: 'João Guilherme', amount: 100 },
+    { name: 'Maria Santos', amount: 30 },
+    { name: 'Carlos Eduardo', amount: 75 }
+];
 let selectedAmount = 0;
 
 // Inicializar
 updateProgress();
+updateContributorsList();
 
 function selectAmount(amount) {
     const currentValue = parseFloat(document.getElementById('custom-value').value) || 0;
