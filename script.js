@@ -6,7 +6,26 @@ let contributors = [
     { name: 'Paulo Roberto', amount: 25 },
     { name: 'João Guilherme', amount: 100 },
     { name: 'Maria Santos', amount: 30 },
-    { name: 'Carlos Eduardo', amount: 75 }
+    { name: 'Carlos Eduardo', amount: 75 },
+    { name: 'Ana Paula', amount: 40 },
+    { name: 'Ricardo Alves', amount: 60 },
+    { name: 'Juliana Costa', amount: 35 },
+    { name: 'Pedro Henrique', amount: 80 },
+    { name: 'Camila Rodrigues', amount: 45 },
+    { name: 'Lucas Martins', amount: 55 },
+    { name: 'Beatriz Lima', amount: 70 },
+    { name: 'Gabriel Souza', amount: 20 },
+    { name: 'Mariana Oliveira', amount: 90 },
+    { name: 'Rafael Santos', amount: 65 },
+    { name: 'Larissa Ferreira', amount: 50 },
+    { name: 'Thiago Pereira', amount: 85 },
+    { name: 'Amanda Silva', amount: 40 },
+    { name: 'Bruno Costa', amount: 95 },
+    { name: 'Isabela Rocha', amount: 30 },
+    { name: 'Matheus Dias', amount: 75 },
+    { name: 'Letícia Gomes', amount: 55 },
+    { name: 'Vinícius Araújo', amount: 48 },
+    { name: 'Gabriela Mendes', amount: 62 }
 ];
 let selectedAmount = 0;
 
