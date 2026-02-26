@@ -54,8 +54,10 @@
             align-items: center;
         }
 
-        #qrcode canvas {
+        #qrcode img {
             border-radius: 10px;
+            max-width: 100%;
+            height: auto;
         }
 
         .pix-code {
@@ -119,7 +121,6 @@
         <a href="/" class="back-btn">← Voltar para a página inicial</a>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         const pixCode = localStorage.getItem('pixCode');
         const amount = localStorage.getItem('pixAmount');
@@ -131,27 +132,10 @@
         document.getElementById('amount').textContent = 'R$ ' + parseFloat(amount).toFixed(2);
         document.getElementById('pixCode').textContent = pixCode;
 
-        // Gerar QR Code
-        window.addEventListener('load', function() {
-            try {
-                const qrcodeContainer = document.getElementById("qrcode");
-                qrcodeContainer.innerHTML = ''; // Limpar conteúdo anterior
-                
-                new QRCode(qrcodeContainer, {
-                    text: pixCode,
-                    width: 250,
-                    height: 250,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.M
-                });
-                
-                console.log('QR Code gerado com sucesso!');
-            } catch (error) {
-                console.error('Erro ao gerar QR Code:', error);
-                document.getElementById('qrcode').innerHTML = '<p style="color: #999;">Use o código Pix abaixo</p>';
-            }
-        });
+        // Gerar QR Code usando API
+        const qrcodeContainer = document.getElementById("qrcode");
+        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(pixCode)}`;
+        qrcodeContainer.innerHTML = `<img src="${qrCodeUrl}" alt="QR Code Pix" />`;
 
         function copyCode() {
             navigator.clipboard.writeText(pixCode).then(() => {
