@@ -72,6 +72,12 @@ function donate() {
         return;
     }
     
+    // Validar valor mínimo
+    if (amount < 5) {
+        alert('⚠️ O valor mínimo para doação é R$ 5,00');
+        return;
+    }
+    
     // Validar valor máximo
     if (amount > 120) {
         alert('⚠️ O valor máximo por transação é R$ 120,00.\n\nPara valores maiores, faça múltiplas doações.');
