@@ -72,8 +72,11 @@ app.post('/create-payment', async (req, res) => {
             message: error.message,
             response: error.response?.data,
             status: error.response?.status,
+            headers: error.response?.headers,
             config: {
                 url: error.config?.url,
+                method: error.config?.method,
+                headers: error.config?.headers,
                 data: error.config?.data
             }
         });
