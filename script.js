@@ -33,6 +33,17 @@ let selectedAmount = 0;
 updateProgress();
 updateContributorsList();
 
+// Event listeners
+document.querySelectorAll('.donation-btn[data-amount]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        selectAmount(parseInt(this.dataset.amount));
+    });
+});
+
+document.getElementById('donate-btn').addEventListener('click', donate);
+document.getElementById('share-whatsapp').addEventListener('click', shareWhatsApp);
+document.getElementById('share-instagram').addEventListener('click', shareInstagram);
+
 function selectAmount(amount) {
     const currentValue = parseFloat(document.getElementById('custom-value').value) || 0;
     
