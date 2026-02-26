@@ -4,13 +4,16 @@ const axios = require('axios');
 
 const app = express();
 
-// Configurar SecurePay
+// Configurar SecurePayments
 const SECUREPAY_PUBLIC_KEY = process.env.SECUREPAY_PUBLIC_KEY;
 const SECUREPAY_SECRET_KEY = process.env.SECUREPAY_SECRET_KEY;
 const SECUREPAY_API_URL = 'https://www.securepayments.com.br/api/v1';
 
 // Criar credenciais Base64 para autenticação
 function getAuthCredentials() {
+    if (!SECUREPAY_PUBLIC_KEY || !SECUREPAY_SECRET_KEY) {
+        throw new Error('Chaves da SecurePayments não configuradas');
+    }
     const credentials = `${SECUREPAY_PUBLIC_KEY}:${SECUREPAY_SECRET_KEY}`;
     return Buffer.from(credentials).toString('base64');
 }
@@ -19,7 +22,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-// Criar cobrança Pix na SecurePay
+// Criar cobrança Pix na SecurePayments
 app.post('/create-payment', async (req, res) => {
     try {
         const { amount, name, email } = req.body;
@@ -47,7 +50,7 @@ app.post('/create-payment', async (req, res) => {
             postbackUrl: process.env.WEBHOOK_URL || 'https://daniel-vakinha.onrender.com/webhook'
         };
 
-        console.log('Enviando para SecurePay:', paymentData);
+        console.log('Enviando para SecurePayments:', paymentData);
 
         const credentials = getAuthCredentials();
         const response = await axios.post(`${SECUREPAY_API_URL}/transactions`, paymentData, {
@@ -57,37 +60,26 @@ app.post('/create-payment', async (req, res) => {
             }
         });
 
-        console.log('Resposta da SecurePay:', response.data);
+        console.log('Resposta da SecurePayments:', response.data);
 
-        // A resposta da SecurePay retorna pixCode e pixQrCodeUrl
+        // A resposta retorna pixCode e pixQrCodeUrl
         res.json({ 
             pix_code: response.data.pixCode,
             qr_code: response.data.pixCode,
             qr_code_url: response.data.pixQrCodeUrl,
-            charge_id: response.data.id,
-            external_id: response.data.externalId
+            charge_id: response.data.id
         });
     } catch (error) {
-        console.error('Erro detalhado:', {
+        console.error('Erro ao criar pagamento:', {
             message: error.message,
             response: error.response?.data,
-            status: error.response?.status,
-            headers: error.response?.headers,
-            config: {
-                url: error.config?.url,
-                method: error.config?.method,
-                headers: error.config?.headers,
-                data: error.config?.data
-            }
+            status: error.response?.status
         });
         
-        // Retornar erro mais detalhado
         const errorMessage = error.response?.data?.message || error.message;
-        const errorDetails = error.response?.data?.errors || error.response?.data;
         
         res.status(error.response?.status || 500).json({ 
             error: 'Erro ao criar cobrança',
-            details: errorDetails || errorMessage,
             message: errorMessage
         });
     }
@@ -96,18 +88,7 @@ app.post('/create-payment', async (req, res) => {
 // Webhook para receber notificações de pagamento
 app.post('/webhook', async (req, res) => {
     try {
-        const { event, data } = req.body;
-
-        console.log('Webhook recebido:', event, data);
-
-        if (event === 'charge.paid' || event === 'payment.approved') {
-            console.log('Pagamento aprovado!', {
-                id: data.id,
-                amount: data.amount,
-                customer: data.customer
-            });
-        }
-
+        console.log('Webhook recebido:', req.body);
         res.sendStatus(200);
     } catch (error) {
         console.error('Erro no webhook:', error);
@@ -115,51 +96,8 @@ app.post('/webhook', async (req, res) => {
     }
 });
 
-// Rotas de retorno
-app.get('/success', (req, res) => {
-    res.send(`
-        <html>
-            <head>
-                <meta charset="UTF-8">
-                <style>
-                    body { font-family: Arial; text-align: center; padding: 50px; background: #4CAF50; color: white; }
-                    h1 { font-size: 3em; }
-                    a { color: white; text-decoration: underline; }
-                </style>
-            </head>
-            <body>
-                <h1>✅ Pagamento Aprovado!</h1>
-                <p>Obrigado pela sua contribuição para ajudar o Daniel!</p>
-                <a href="/">Voltar para a página inicial</a>
-            </body>
-        </html>
-    `);
-});
-
-app.get('/failure', (req, res) => {
-    res.send(`
-        <html>
-            <head>
-                <meta charset="UTF-8">
-                <style>
-                    body { font-family: Arial; text-align: center; padding: 50px; background: #f44336; color: white; }
-                    h1 { font-size: 3em; }
-                    a { color: white; text-decoration: underline; }
-                </style>
-            </head>
-            <body>
-                <h1>❌ Pagamento Falhou</h1>
-                <p>Houve um problema com o pagamento. Tente novamente.</p>
-                <a href="/">Voltar e tentar novamente</a>
-            </body>
-        </html>
-    `);
-});
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
-    console.log('Gateway: SecurePay API v1');
-    console.log('Autenticação: Basic Auth');
-    console.log('Última atualização: ' + new Date().toISOString());
+    console.log('Gateway: SecurePayments');
 });
