@@ -156,6 +156,7 @@ app.get('/failure', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
-    console.log('Gateway: SecurePay');
-    console.log('Chave pública configurada!');
+    console.log('Gateway: SecurePay API v1');
+    console.log('Autenticação: Basic Auth');
+    console.log('Última atualização: ' + new Date().toISOString());
 });

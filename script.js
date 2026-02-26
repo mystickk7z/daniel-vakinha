@@ -82,7 +82,7 @@ function donate() {
     const name = prompt('Digite seu nome (opcional):') || 'Doador Anônimo';
     const email = prompt('Digite seu email (opcional):') || '';
     
-    // Criar pagamento no SyncPay
+    // Criar pagamento na SecurePay
     createPayment(amount, name, email);
 }
 
