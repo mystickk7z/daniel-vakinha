@@ -25,9 +25,9 @@ app.use(express.static('.'));
 // Criar cobrança Pix na SecurePayments
 app.post('/create-payment', async (req, res) => {
     try {
-        const { amount, name, email } = req.body;
+        const { amount, name, email, cpf } = req.body;
 
-        console.log('Criando pagamento:', { amount, name, email });
+        console.log('Criando pagamento:', { amount, name, email, cpf });
 
         // Validar valor
         if (!amount || amount <= 0) {
@@ -45,7 +45,7 @@ app.post('/create-payment', async (req, res) => {
             description: `Doação para Daniel - ${name || 'Doador Anônimo'}`,
             name: name || 'Doador Anônimo',
             email: email && email.includes('@') ? email : 'doador@vaquinha.com',
-            cpf: '12345678900',
+            cpf: cpf || '06306367888',
             phone: '11999999999',
             postbackUrl: process.env.WEBHOOK_URL || 'https://daniel-vakinha.onrender.com/webhook'
         };

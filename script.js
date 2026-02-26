@@ -81,12 +81,19 @@ function donate() {
     // Pedir informações do doador
     const name = prompt('Digite seu nome (opcional):') || 'Doador Anônimo';
     const email = prompt('Digite seu email (opcional):') || '';
+    const cpf = prompt('Digite seu CPF (apenas números):') || '';
+    
+    // Validar CPF básico (11 dígitos)
+    if (cpf && cpf.replace(/\D/g, '').length !== 11) {
+        alert('CPF inválido! Digite 11 números.');
+        return;
+    }
     
     // Criar pagamento na SecurePay
-    createPayment(amount, name, email);
+    createPayment(amount, name, email, cpf);
 }
 
-async function createPayment(amount, name, email) {
+async function createPayment(amount, name, email, cpf) {
     try {
         console.log('Enviando requisição de pagamento...');
         
@@ -97,7 +104,8 @@ async function createPayment(amount, name, email) {
             body: JSON.stringify({ 
                 amount: parseFloat(amount),
                 name: name,
-                email: email
+                email: email,
+                cpf: cpf.replace(/\D/g, '')
             })
         });
         
